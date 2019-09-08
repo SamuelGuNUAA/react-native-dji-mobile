@@ -194,6 +194,28 @@ const DJIMobileWrapper = {
   setLandingProtectionEnabled: async (enabled: boolean) => {
     return await DJIMobile.setLandingProtectionEnabled(enabled);
   },
+
+    // FF DJI
+  getMotorsOn: async () => {
+    return await DJIMobile.getMotorsOn();
+  },
+
+  getFlightTimeInSeconds: async () => {
+    return await DJIMobile.getFlightTimeInSeconds();
+  },
+
+  getAircraftDetail: async () => {
+    return await DJIMobile.getAircraftDetail();
+  },
+
+  getBatteryDetail: async () => {
+    return await DJIMobile.getBatteryDetail();
+  },
+
+  getCameraDetail: async () => {
+    return await DJIMobile.getCameraDetail();
+  },
+    // FF DJI
 };
 
 export default DJIMobileWrapper;

@@ -40,6 +40,10 @@ import dji.sdk.products.Aircraft;
 import dji.sdk.sdkmanager.DJISDKInitEvent;
 import dji.sdk.sdkmanager.DJISDKManager;
 
+import dji.common.product.Model;
+import dji.keysdk.BatteryKey;
+import dji.sdk.flightcontroller.FlightController;
+import dji.common.util.CommonCallbacks;
 
 public class DJIMobile extends ReactContextBaseJavaModule {
 
@@ -114,6 +118,79 @@ public class DJIMobile extends ReactContextBaseJavaModule {
       @Override
       public void onInitProcess(DJISDKInitEvent djisdkInitEvent, int i) {
 
+      }
+    });
+  }
+
+  @ReactMethod
+  public void getAircraftDetail(final Promise promise) {
+    Model model =  DJISDKManager.getInstance().getProduct().getModel();
+    promise.resolve(model.name());
+  }
+
+  @ReactMethod
+  public void getBatteryDetail(final Promise promise) {
+    product = DJISDKManager.getInstance().getProduct();
+    Aircraft aircraft =  (Aircraft) product;
+    FlightController flightController = aircraft.getFlightController();
+    // aircraft.getBattery().getSerialNumber(new CommonCallbacks.CompletionCallbackWith<String>() {
+    flightController.getSerialNumber(new CommonCallbacks.CompletionCallbackWith<String>() {
+      @Override
+      public void onSuccess(String value) {
+        promise.resolve(value);
+      }
+
+      @Override
+      public void onFailure(@NonNull DJIError djiError) {
+        promise.reject("get battery detail error", djiError.getDescription());
+      }
+    });
+  }
+
+  @ReactMethod
+  public void getCameraDetail(final Promise promise) {
+    product = DJISDKManager.getInstance().getProduct();
+    if (product == null) {
+      promise.reject("No modal connected");
+    } else {
+      Aircraft aircraft =  (Aircraft) product;
+      promise.resolve(aircraft.getCamera().getDisplayName());
+    }
+  }
+
+  @ReactMethod
+  public void getMotorsOn(final Promise promise) {
+    DJIKey areMotorsOnKey = FlightControllerKey.create(FlightControllerKey.ARE_MOTOR_ON);
+    DJISDKManager.getInstance().getKeyManager().getValue(areMotorsOnKey, new GetCallback() {
+      @Override
+      public void onSuccess(@NonNull Object value) {
+        if (value instanceof Boolean) {
+          promise.resolve(value);
+        }
+      }
+
+      @Override
+      public void onFailure(@NonNull DJIError djiError) {
+        promise.reject("getMotorsOn Error", djiError.getDescription());
+      }
+    });
+  }
+
+  @ReactMethod
+  public void getFlightTimeInSeconds(final Promise promise) {
+    DJIKey getFlightTimeInSecondsKey = FlightControllerKey.create(FlightControllerKey.FLY_TIME_IN_SECONDS);
+    DJISDKManager.getInstance().getKeyManager().getValue(getFlightTimeInSecondsKey, new GetCallback() {
+      @Override
+      public void onSuccess(@NonNull Object value) {
+        // if (value instanceof Boolean) {
+        // Log.i("SG-Get flight time", value);
+        promise.resolve(value);
+        // }
+      }
+
+      @Override
+      public void onFailure(@NonNull DJIError djiError) {
+        promise.reject("getFlightTimeInSeconds Error", djiError.getDescription());
       }
     });
   }
