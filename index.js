@@ -187,6 +187,26 @@ const DJIMobileWrapper = {
   setVirtualStickAdvancedModeEnabled: async (enabled: boolean) => {
     return await DJIMobile.setVirtualStickAdvancedModeEnabled(enabled);
   },
+
+  getMotorsOn: async () => {
+    return await DJIMobile.getMotorsOn();
+  },
+
+  getFlightTimeInSeconds: async () => {
+    return await DJIMobile.getFlightTimeInSeconds();
+  },
+
+  getAircraftDetail: async () => {
+    return await DJIMobile.getAircraftDetail();
+  },
+
+  getBatteryDetail: async () => {
+    return await DJIMobile.getBatteryDetail();
+  },
+
+  getCameraDetail: async () => {
+    return await DJIMobile.getCameraDetail();
+  },
 };
 
 export default DJIMobileWrapper;
