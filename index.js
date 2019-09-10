@@ -200,6 +200,10 @@ const DJIMobileWrapper = {
     return await DJIMobile.getAircraftDetail();
   },
 
+  getFlightControllerDetail: async () => {
+    return await DJIMobile.getFlightControllerDetail();
+  },
+
   getBatteryDetail: async () => {
     return await DJIMobile.getBatteryDetail();
   },
