@@ -122,30 +122,64 @@ public class DJIMobile extends ReactContextBaseJavaModule {
     });
   }
 
-  @ReactMethod
-  public void getAircraftDetail(final Promise promise) {
-    Model model =  DJISDKManager.getInstance().getProduct().getModel();
-    promise.resolve(model.name());
-  }
+    @ReactMethod
+    public void getAircraftDetail(final Promise promise) {
+        product = DJISDKManager.getInstance().getProduct();
+        if (product == null) {
+            promise.reject("No modal connected");
+        } else {
+            Model model = DJISDKManager.getInstance().getProduct().getModel();
+            if (model == null) {
+                promise.reject("Can't get aircraft detail");
+            } else {
+                promise.resolve(model.name());
+            }
+        }
+    }
 
-  @ReactMethod
-  public void getBatteryDetail(final Promise promise) {
-    product = DJISDKManager.getInstance().getProduct();
-    Aircraft aircraft =  (Aircraft) product;
-    FlightController flightController = aircraft.getFlightController();
-    // aircraft.getBattery().getSerialNumber(new CommonCallbacks.CompletionCallbackWith<String>() {
-    flightController.getSerialNumber(new CommonCallbacks.CompletionCallbackWith<String>() {
-      @Override
-      public void onSuccess(String value) {
-        promise.resolve(value);
-      }
+    @ReactMethod
+    public void getFlightControllerDetail(final Promise promise) {
+        product = DJISDKManager.getInstance().getProduct();
+        if (product == null) {
+            promise.reject("No modal connected");
+        } else {
+            Aircraft aircraft = (Aircraft) product;
+            FlightController flightController = aircraft.getFlightController();
+            flightController.getSerialNumber(new CommonCallbacks.CompletionCallbackWith<String>() {
+                @Override
+                public void onSuccess(String value) {
+                    promise.resolve(value);
+                }
 
-      @Override
-      public void onFailure(@NonNull DJIError djiError) {
-        promise.reject("get battery detail error", djiError.getDescription());
-      }
-    });
-  }
+                @Override
+                public void onFailure(@NonNull DJIError djiError) {
+                    promise.reject("get battery detail error", djiError.getDescription());
+                }
+            });
+        }
+    }
+
+    @ReactMethod
+    public void getBatteryDetail(final Promise promise) {
+        product = DJISDKManager.getInstance().getProduct();
+        if (product == null) {
+            promise.reject("No modal connected");
+        } else {
+            Aircraft aircraft = (Aircraft) product;
+            FlightController flightController = aircraft.getFlightController();
+            aircraft.getBattery().getSerialNumber(new CommonCallbacks.CompletionCallbackWith<String>() {
+                @Override
+                public void onSuccess(String value) {
+                    promise.resolve(value);
+                }
+
+                @Override
+                public void onFailure(@NonNull DJIError djiError) {
+                    promise.reject("get battery detail error", djiError.getDescription());
+                }
+            });
+        }
+    }
 
   @ReactMethod
   public void getCameraDetail(final Promise promise) {
@@ -154,7 +188,11 @@ public class DJIMobile extends ReactContextBaseJavaModule {
       promise.reject("No modal connected");
     } else {
       Aircraft aircraft =  (Aircraft) product;
-      promise.resolve(aircraft.getCamera().getDisplayName());
+        if (aircraft == null) {
+            promise.reject("Can't get camera");
+        } else {
+            promise.resolve(aircraft.getCamera().getDisplayName());
+        }
     }
   }
 
