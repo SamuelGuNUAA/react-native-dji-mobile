@@ -17,6 +17,6 @@ Pod::Spec.new do |spec|
   spec.swift_version = '5.0'
 
   spec.dependency 'React'
-  spec.dependency 'DJI-SDK-iOS', '~> 4.10'
-  spec.dependency 'DJIWidget', '~> 1.5'
+  spec.dependency 'DJI-SDK-iOS', '~> 4.11'
+  spec.dependency 'DJIWidget', '~> 1.6.1'
 end
